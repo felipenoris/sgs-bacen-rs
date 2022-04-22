@@ -1,0 +1,11 @@
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap-env:Body>
+        <ns0:getValoresSeriesXML xmlns:ns0="http://publico.ws.casosdeuso.sgs.pec.bcb.gov.br">
+            <in0>
+                <item xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:long">1</item>
+            </in0>
+            <in1>01/02/2022</in1>
+            <in2>10/2/2022</in2>
+        </ns0:getValoresSeriesXML>
+    </soap-env:Body>
+</soap-env:Envelope>
