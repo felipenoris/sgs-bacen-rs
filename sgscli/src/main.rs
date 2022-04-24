@@ -1,6 +1,7 @@
 use clap::{Parser, Subcommand};
 use sgslib::messages::Item;
 use sgslib::ports::FachadaWSSGS;
+use std::process;
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about)]
@@ -12,13 +13,12 @@ struct Args {
 #[derive(Subcommand, Debug)]
 enum Commands {
     Series {
-        #[clap(short, long)]
-        list: String,
+        list: Vec<String>,
 
-        #[clap(short, long, value_name = "dd/mm/yyyy")]
+        #[clap(short, long, value_name = "date")]
         from: String,
 
-        #[clap(short, long, value_name = "dd/mm/yyyy")]
+        #[clap(short, long, value_name = "date")]
         to: String,
     },
 
@@ -41,15 +41,75 @@ async fn main() {
     }
 }
 
-async fn execute_get_series(list: String, from: String, to: String) {
+#[derive(Debug, Clone)]
+struct InvalidDateStringFormat {
+    str: String,
+}
+
+fn exit_with_error(err: InvalidDateStringFormat) -> ! {
+    eprintln!(
+        "Invalid date format. Use yyyy-mm-dd or dd/mm/yyyy. Got `{}`.",
+        err.str
+    );
+    process::exit(1);
+}
+
+fn into_sgs_date_format(str: String) -> Result<String, InvalidDateStringFormat> {
+    let str_bytes = str.as_bytes();
+
+    if str_bytes.len() != 10 {
+        return Err(InvalidDateStringFormat { str });
+    }
+
+    for b in str_bytes {
+        if *b != b'-' && *b != b'/' && !b.is_ascii_digit() {
+            return Err(InvalidDateStringFormat { str });
+        }
+    }
+
+    if str_bytes[4] == b'-' && str_bytes[7] == b'-' {
+        // yyyy-mm-dd
+        let yyyy = &str_bytes[0..4];
+        let mm = &str_bytes[5..7];
+        let dd = &str_bytes[8..10];
+
+        let result = vec![
+            dd[0], dd[1], b'/', mm[0], mm[1], b'/', yyyy[0], yyyy[1], yyyy[2], yyyy[3],
+        ];
+        return Ok(String::from_utf8(result).unwrap());
+    } else if str_bytes[2] == b'/' && str_bytes[5] == b'/' {
+        // dd/mm/yyyy
+        Ok(str)
+    } else {
+        Err(InvalidDateStringFormat { str })
+    }
+}
+
+#[test]
+fn test_into_sgs_date_format() {
+    assert!(into_sgs_date_format("2020-12-31".to_string()).unwrap() == "31/12/2020");
+    assert!(into_sgs_date_format("31/12/2020".to_string()).unwrap() == "31/12/2020");
+}
+
+async fn execute_get_series(list: Vec<String>, from: String, to: String) {
     let sgs_client = sgslib::services::FachadaWSSGSService::new_client(Option::None);
     let mut vec_items: Vec<Item> = Vec::new();
 
-    for id in list.split(',') {
+    for id in list {
         vec_items.push(Item::new(id.parse().unwrap()));
     }
 
     let item_list = sgslib::messages::ItemList { items: vec_items };
+
+    let from = match into_sgs_date_format(from) {
+        Ok(str) => str,
+        Err(err) => exit_with_error(err),
+    };
+
+    let to = match into_sgs_date_format(to) {
+        Ok(str) => str,
+        Err(err) => exit_with_error(err),
+    };
 
     let request = sgslib::messages::GetValoresSeriesXMLRequest {
         in0: item_list,

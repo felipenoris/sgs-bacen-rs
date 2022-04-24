@@ -7,6 +7,9 @@ A SOAP client for Brazilian Central Bank's Time Series Management System <https:
 Running `cargo build` will create the binary `sgscli` that
 can be used to query values from SGS.
 
+The following command will print the last value
+for the time series identified by code `1`.
+
 ```shell
 $ sgscli last-value 1
 <?xml version='1.0' encoding='ISO-8859-1'?>
@@ -26,8 +29,14 @@ $ sgscli last-value 1
 </resposta>
 ```
 
+The following example will print the historical values
+for time series identified by codes `1` and `2`
+from date `2020-01-01` to `2020-01-05`.
+
+Dates can be informed using `yyyy-mm-dd` or `dd/mm/yyyy` format.
+
 ```shell
-$ sgscli series --list 1,2 --from 01/01/2020 --to 05/01/2020
+$ sgscli series 1 2 --from 2020-01-01 --to 2020-01-05
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <SERIES>
 <SERIE ID='1'>
