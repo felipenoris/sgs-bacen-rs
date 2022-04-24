@@ -43,27 +43,27 @@ async fn main() {
 
 #[derive(Debug, Clone)]
 struct InvalidDateStringFormat {
-    str: String,
+    date_str: String,
 }
 
 fn exit_with_error(err: InvalidDateStringFormat) -> ! {
     eprintln!(
         "Invalid date format. Use yyyy-mm-dd or dd/mm/yyyy. Got `{}`.",
-        err.str
+        err.date_str
     );
     process::exit(1);
 }
 
-fn into_sgs_date_format(str: String) -> Result<String, InvalidDateStringFormat> {
-    let str_bytes = str.as_bytes();
+fn into_sgs_date_format(date_str: String) -> Result<String, InvalidDateStringFormat> {
+    let str_bytes = date_str.as_bytes();
 
     if str_bytes.len() != 10 {
-        return Err(InvalidDateStringFormat { str });
+        return Err(InvalidDateStringFormat { date_str });
     }
 
     for b in str_bytes {
         if *b != b'-' && *b != b'/' && !b.is_ascii_digit() {
-            return Err(InvalidDateStringFormat { str });
+            return Err(InvalidDateStringFormat { date_str });
         }
     }
 
@@ -79,9 +79,9 @@ fn into_sgs_date_format(str: String) -> Result<String, InvalidDateStringFormat> 
         return Ok(String::from_utf8(result).unwrap());
     } else if str_bytes[2] == b'/' && str_bytes[5] == b'/' {
         // dd/mm/yyyy
-        Ok(str)
+        Ok(date_str)
     } else {
-        Err(InvalidDateStringFormat { str })
+        Err(InvalidDateStringFormat { date_str })
     }
 }
 
