@@ -59,7 +59,7 @@ pub struct Item {
     pub data: ItemDate,
 
     #[yaserde(child, rename = "VALOR")]
-    pub valor: f64,
+    pub valor: Option<f64>,
 
     #[yaserde(child, rename = "BLOQUEADO")]
     pub bloqueado: bool,
