@@ -1,0 +1,8 @@
+[package]
+name = "sgs-bacen-examples"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sgslib = { version = "0.1", path = "../sgslib" }
+tokio = { version = "1", features = ["full"] }

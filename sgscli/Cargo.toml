@@ -1,0 +1,7 @@
+[package]
+name = "sgscli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sgslib = { version="0.1", path = "../sgslib" }
