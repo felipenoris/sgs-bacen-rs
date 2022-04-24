@@ -19,3 +19,7 @@ lto = true
 opt-level = "z"
 strip = true
 panic = "abort"
+
+[[bin]]
+name = "sgs"
+path = "./src/main.rs"
