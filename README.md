@@ -4,7 +4,7 @@ A SOAP client for Brazilian Central Bank's Time Series Management System <https:
 
 # Installation
 
-Clone this repo and run `cargo install` passing the `sgscli` subfolder path.
+Clone this repo and run `cargo install` passing the path to the `sgscli` subfolder.
 
 ```shell
 git clone https://github.com/felipenoris/sgs-bacen-rs
