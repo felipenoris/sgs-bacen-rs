@@ -76,7 +76,8 @@ fn into_sgs_date_format(date_str: String) -> Result<String, InvalidDateStringFor
         let result = vec![
             dd[0], dd[1], b'/', mm[0], mm[1], b'/', yyyy[0], yyyy[1], yyyy[2], yyyy[3],
         ];
-        return Ok(String::from_utf8(result).unwrap());
+
+        Ok(String::from_utf8(result).unwrap())
     } else if str_bytes[2] == b'/' && str_bytes[5] == b'/' {
         // dd/mm/yyyy
         Ok(date_str)
