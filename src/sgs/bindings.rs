@@ -87,6 +87,35 @@ impl ports::FachadaWSSGS for FachadaWSSGSSoapBinding {
             Err(r.body.fault)
         }
     }
+
+    async fn get_ultimo_valor_xml(
+        &self,
+        get_ultimo_valor_xml_request: messages::GetUltimoValorXMLRequest,
+    ) -> Result<messages::GetUltimoValorXMLResponse, Option<SoapFault>> {
+        let __request = GetUltimoValorXMLRequestSoapEnvelope::new(SoapGetUltimoValorXMLRequest {
+            body: get_ultimo_valor_xml_request,
+            xmlns: Option::Some("https://www3.bcb.gov.br/wssgs/services/FachadaWSSGS".to_string()),
+        });
+
+        let (status, response) = self
+            .send_soap_request(&__request, "")
+            .await
+            .map_err(|err| {
+                println!("Failed to send SOAP request: {:?}", err);
+                None
+            })?;
+
+        let r: GetUltimoValorXMLResponseSoapEnvelope =
+            yaserde::de::from_str(&response).map_err(|err| {
+                println!("Failed to unmarshal SOAP response: {:?}", err);
+                None
+            })?;
+        if status.is_success() {
+            Ok(r.body.body)
+        } else {
+            Err(r.body.fault)
+        }
+    }
 }
 
 #[derive(Debug, Default, YaSerialize, YaDeserialize)]
@@ -176,3 +205,89 @@ impl GetValoresSeriesXMLResponseSoapEnvelope {
     }
 }
 */
+
+#[derive(Debug, Default, YaSerialize, YaDeserialize)]
+pub struct SoapGetUltimoValorXMLRequest {
+    #[yaserde(rename = "getUltimoValorXML", default)]
+    pub body: messages::GetUltimoValorXMLRequest,
+    #[yaserde(attribute)]
+    pub xmlns: Option<String>,
+}
+#[derive(Debug, Default, YaSerialize, YaDeserialize)]
+#[yaserde(
+    rename = "Envelope",
+    namespace = "soapenv: http://schemas.xmlsoap.org/soap/envelope/",
+    prefix = "soapenv"
+)]
+pub struct GetUltimoValorXMLRequestSoapEnvelope {
+    #[yaserde(rename = "encodingStyle", prefix = "soapenv", attribute)]
+    pub encoding_style: String,
+    #[yaserde(rename = "tns", prefix = "xmlns", attribute)]
+    pub tnsattr: Option<String>,
+    #[yaserde(rename = "urn", prefix = "xmlns", attribute)]
+    pub urnattr: Option<String>,
+    #[yaserde(rename = "xsi", prefix = "xmlns", attribute)]
+    pub xsiattr: Option<String>,
+    #[yaserde(rename = "Header", prefix = "soapenv")]
+    pub header: Option<Header>,
+    #[yaserde(rename = "Body", prefix = "soapenv")]
+    pub body: SoapGetUltimoValorXMLRequest,
+}
+
+impl GetUltimoValorXMLRequestSoapEnvelope {
+    pub fn new(body: SoapGetUltimoValorXMLRequest) -> Self {
+        GetUltimoValorXMLRequestSoapEnvelope {
+            encoding_style: SOAP_ENCODING.to_string(),
+            tnsattr: Option::Some(
+                "https://www3.bcb.gov.br/wssgs/services/FachadaWSSGS".to_string(),
+            ),
+            body,
+            urnattr: None,
+            xsiattr: None,
+            header: None,
+        }
+    }
+}
+
+#[derive(Debug, Default, YaSerialize, YaDeserialize)]
+pub struct SoapGetUltimoValorXMLResponse {
+    #[yaserde(rename = "getUltimoValorXMLResponse", default)]
+    pub body: messages::GetUltimoValorXMLResponse,
+    #[yaserde(rename = "Fault", default)]
+    pub fault: Option<SoapFault>,
+}
+#[derive(Debug, Default, YaSerialize, YaDeserialize)]
+#[yaserde(
+    rename = "Envelope",
+    namespace = "soapenv: http://schemas.xmlsoap.org/soap/envelope/",
+    prefix = "soapenv"
+)]
+pub struct GetUltimoValorXMLResponseSoapEnvelope {
+    #[yaserde(rename = "encodingStyle", prefix = "soapenv", attribute)]
+    pub encoding_style: String,
+    #[yaserde(rename = "tns", prefix = "xmlns", attribute)]
+    pub tnsattr: Option<String>,
+    #[yaserde(rename = "urn", prefix = "xmlns", attribute)]
+    pub urnattr: Option<String>,
+    #[yaserde(rename = "xsi", prefix = "xmlns", attribute)]
+    pub xsiattr: Option<String>,
+    #[yaserde(rename = "Header", prefix = "soapenv")]
+    pub header: Option<Header>,
+    #[yaserde(rename = "Body", prefix = "soapenv")]
+    pub body: SoapGetUltimoValorXMLResponse,
+}
+
+impl GetUltimoValorXMLResponseSoapEnvelope {
+    pub fn new(body: SoapGetUltimoValorXMLResponse) -> Self {
+        GetUltimoValorXMLResponseSoapEnvelope {
+            encoding_style: SOAP_ENCODING.to_string(),
+            tnsattr: Option::Some(
+                "https://www3.bcb.gov.br/wssgs/services/FachadaWSSGS".to_string(),
+            ),
+            body,
+            urnattr: None,
+            xsiattr: None,
+            header: None,
+        }
+    }
+}

@@ -6,6 +6,14 @@ mod sgs;
 async fn main() {
     let sgs_client = sgs::services::FachadaWSSGSService::new_client(Option::None);
 
+    let ultimo_valor = sgs_client
+        .get_ultimo_valor_xml(sgs::messages::GetUltimoValorXMLRequest {
+            in0: sgs::messages::Item::new(1),
+        })
+        .await;
+    let ultimo_valor = ultimo_valor.unwrap().get_ultimo_valor_xml_return;
+    println!("Ultimo valor: {:?}", ultimo_valor);
+
     let item1 = sgs::messages::Item::new(1);
     assert!(item1.val() == 1);
     let vec_items = vec![item1];

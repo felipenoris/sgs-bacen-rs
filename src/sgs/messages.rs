@@ -80,6 +80,28 @@ pub struct GetValoresSeriesXMLReturn {
     pub val: String,
 }
 
+#[derive(Debug, Default, YaSerialize, YaDeserialize, Clone)]
+#[yaserde(
+    rename = "getUltimoValorXMLRequest"
+    namespace = "ns0: http://publico.ws.casosdeuso.sgs.pec.bcb.gov.br",
+    prefix = "ns0"
+)]
+pub struct GetUltimoValorXMLRequest {
+    #[yaserde(child)]
+    pub in0: Item,
+}
+
+#[derive(Debug, Default, YaSerialize, YaDeserialize, Clone)]
+#[yaserde(
+    rename = "getUltimoValorXMLResponse",
+    namespace = "ns1: http://publico.ws.casosdeuso.sgs.pec.bcb.gov.br",
+    prefix = "ns1"
+)]
+pub struct GetUltimoValorXMLResponse {
+    #[yaserde(child, rename = "getUltimoValorXMLReturn")]
+    pub get_ultimo_valor_xml_return: String,
+}
+
 // cargo test -- --nocapture
 #[test]
 fn serialize_get_valores_series_xml() {
