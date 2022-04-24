@@ -30,13 +30,13 @@ $ sgscli last-value 1
 ```
 
 The following example will print the historical values
-for time series identified by codes `1` and `2`
+for time series identified by codes `1` (PTAX USD) and `4389` (CDI a.a.)
 from date `2020-01-01` to `2020-01-05`.
 
 Dates can be informed using `yyyy-mm-dd` or `dd/mm/yyyy` format.
 
 ```shell
-$ sgscli series 1 2 --from 2020-01-01 --to 2020-01-05
+$ sgscli series 1 4389 --from 2020-01-01 --to 2020-01-05
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <SERIES>
 <SERIE ID='1'>
@@ -51,15 +51,15 @@ $ sgscli series 1 2 --from 2020-01-01 --to 2020-01-05
                         <BLOQUEADO>false</BLOQUEADO>
                 </ITEM>
         </SERIE>
-        <SERIE ID='2'>
+        <SERIE ID='4389'>
                 <ITEM>
                         <DATA>2/1/2020</DATA>
-                        <VALOR></VALOR>
+                        <VALOR>4.40</VALOR>
                         <BLOQUEADO>false</BLOQUEADO>
                 </ITEM>
                 <ITEM>
                         <DATA>3/1/2020</DATA>
-                        <VALOR></VALOR>
+                        <VALOR>4.40</VALOR>
                         <BLOQUEADO>false</BLOQUEADO>
                 </ITEM>
         </SERIE>
