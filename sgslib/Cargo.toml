@@ -1,13 +1,13 @@
 [package]
 name = "sgslib"
 version = "0.1.0"
+edition = "2021"
 authors = [ "Felipe Noronha <felipenoris@gmail.com>" ]
 license = "MIT"
 description = "A SOAP client for Brazilian Central Bank's Time Series Management System <https://www3.bcb.gov.br/sgspub>"
 homepage = "https://github.com/felipenoris/sgs-bacen-rs"
 repository = "https://github.com/felipenoris/sgs-bacen-rs"
-readme = "README.md"
-edition = "2021"
+readme = "../README.md"
 
 [dependencies]
 yaserde = "0.8"

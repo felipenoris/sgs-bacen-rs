@@ -2,6 +2,20 @@
 name = "sgscli"
 version = "0.1.0"
 edition = "2021"
+authors = [ "Felipe Noronha <felipenoris@gmail.com>" ]
+license = "MIT"
+description = "A SOAP client for Brazilian Central Bank's Time Series Management System <https://www3.bcb.gov.br/sgspub>"
+homepage = "https://github.com/felipenoris/sgs-bacen-rs"
+repository = "https://github.com/felipenoris/sgs-bacen-rs"
+readme = "../README.md"
 
 [dependencies]
 sgslib = { version="0.1", path = "../sgslib" }
+clap = { version = "3.1.12", features = ["derive"] }
+tokio = { version = "1", features = ["full"] }
+
+[profile.release]
+lto = true
+opt-level = "z"
+strip = true
+panic = "abort"
