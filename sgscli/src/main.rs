@@ -103,12 +103,12 @@ async fn execute_get_series(list: Vec<String>, from: String, to: String) {
     let item_list = sgslib::messages::ItemList { items: vec_items };
 
     let from = match into_sgs_date_format(from) {
-        Ok(str) => str,
+        Ok(date_string) => date_string,
         Err(err) => exit_with_error(err),
     };
 
     let to = match into_sgs_date_format(to) {
-        Ok(str) => str,
+        Ok(date_string) => date_string,
         Err(err) => exit_with_error(err),
     };
 
