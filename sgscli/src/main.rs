@@ -93,15 +93,6 @@ fn test_into_sgs_date_format() {
 }
 
 async fn execute_get_series(list: Vec<String>, from: String, to: String) {
-    let sgs_client = sgslib::services::FachadaWSSGSService::new_client(Option::None);
-    let mut vec_items: Vec<Item> = Vec::new();
-
-    for id in list {
-        vec_items.push(Item::new(id.parse().unwrap()));
-    }
-
-    let item_list = sgslib::messages::ItemList { items: vec_items };
-
     let from = match into_sgs_date_format(from) {
         Ok(date_string) => date_string,
         Err(err) => exit_with_error(err),
@@ -112,12 +103,31 @@ async fn execute_get_series(list: Vec<String>, from: String, to: String) {
         Err(err) => exit_with_error(err),
     };
 
+    let mut vec_items: Vec<Item> = Vec::new();
+
+    for id in list.iter() {
+        match id.parse() {
+            Ok(val) => {
+                vec_items.push(Item::new(val));
+            }
+            Err(_) => {
+                eprintln!(
+                    "Invalid ID for serie: `{}`. Hint: all series must have a numeric ID.",
+                    id
+                )
+            }
+        }
+    }
+
+    let item_list = sgslib::messages::ItemList { items: vec_items };
+
     let request = sgslib::messages::GetValoresSeriesXMLRequest {
         in0: item_list,
         in1: from,
         in2: to,
     };
 
+    let sgs_client = sgslib::services::FachadaWSSGSService::new_client(Option::None);
     let response = sgs_client.get_valores_series_xml(request).await;
 
     let series_xml = response.unwrap().get_valores_series_xml_return.val;
