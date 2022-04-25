@@ -4,3 +4,9 @@ members = [
     "sgscli",
     "examples",
 ]
+
+[profile.release]
+lto = true
+opt-level = "z"
+strip = true
+panic = "abort"
