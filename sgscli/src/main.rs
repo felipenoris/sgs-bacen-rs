@@ -112,7 +112,7 @@ async fn execute_get_series(list: Vec<String>, from: String, to: String) {
             }
             Err(_) => {
                 eprintln!(
-                    "Invalid ID for serie: `{}`. Hint: all series must have a numeric ID.",
+                    "Invalid Serie ID: `{}`. Hint: all series must have a numeric ID.",
                     id
                 );
                 process::exit(1);
