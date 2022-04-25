@@ -103,7 +103,7 @@ async fn execute_get_series(list: Vec<String>, from: String, to: String) {
         Err(err) => exit_with_error(err),
     };
 
-    let mut vec_items: Vec<Item> = Vec::new();
+    let mut vec_items: Vec<Item> = Vec::with_capacity(list.len());
 
     for id in list.iter() {
         match id.parse() {
