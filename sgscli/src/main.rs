@@ -144,11 +144,22 @@ async fn execute_get_series(list: Vec<String>, from: String, to: String) {
 async fn execute_get_ultimo_valor(id: &str) {
     let sgs_client = sgslib::services::FachadaWSSGSService::new_client(Option::None);
 
-    let ultimo_valor = sgs_client
-        .get_ultimo_valor_xml(sgslib::messages::GetUltimoValorXMLRequest {
-            in0: sgslib::messages::Item::new(id.parse().unwrap()),
-        })
-        .await;
-    let ultimo_valor = ultimo_valor.unwrap().get_ultimo_valor_xml_return;
-    println!("{}", ultimo_valor);
+    match id.parse() {
+        Ok(id) => {
+            let ultimo_valor = sgs_client
+                .get_ultimo_valor_xml(sgslib::messages::GetUltimoValorXMLRequest {
+                    in0: sgslib::messages::Item::new(id),
+                })
+                .await;
+            let ultimo_valor = ultimo_valor.unwrap().get_ultimo_valor_xml_return;
+            println!("{}", ultimo_valor);
+        }
+        Err(_) => {
+            eprintln!(
+                "Invalid Serie ID: `{}`. Hint: all series must have a numeric ID.",
+                id
+            );
+            process::exit(1);
+        }
+    }
 }
