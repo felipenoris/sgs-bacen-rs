@@ -137,8 +137,16 @@ async fn execute_get_series(list: Vec<String>, from: String, to: String) {
     let sgs_client = sgslib::services::FachadaWSSGSService::new_client(Option::None);
     let response = sgs_client.get_valores_series_xml(request).await;
 
-    let series_xml = response.unwrap().get_valores_series_xml_return.val;
-    println!("{}", series_xml);
+    match response {
+        Ok(response) => {
+            let series_xml = response.get_valores_series_xml_return.val;
+            println!("{}", series_xml);
+        }
+        Err(err) => {
+            eprintln!("Error: {:?}", err);
+            process::exit(1);
+        }
+    }
 }
 
 async fn execute_get_ultimo_valor(id: &str) {
@@ -151,8 +159,17 @@ async fn execute_get_ultimo_valor(id: &str) {
                     in0: sgslib::messages::Item::new(id),
                 })
                 .await;
-            let ultimo_valor = ultimo_valor.unwrap().get_ultimo_valor_xml_return;
-            println!("{}", ultimo_valor);
+
+            match ultimo_valor {
+                Ok(ultimo_valor) => {
+                    let ultimo_valor = ultimo_valor.get_ultimo_valor_xml_return;
+                    println!("{}", ultimo_valor);
+                }
+                Err(err) => {
+                    eprintln!("Error: {:?}", err);
+                    process::exit(1);
+                }
+            }
         }
         Err(_) => {
             eprintln!(
