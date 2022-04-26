@@ -12,17 +12,23 @@ struct Args {
 
 #[derive(Subcommand, Debug)]
 enum Commands {
+    /// query values of one or more series inside a given period
     Series {
+        /// list of identifiers
         list: Vec<String>,
 
+        /// initial date
         #[clap(short, long, value_name = "date")]
         from: String,
 
+        /// end date
         #[clap(short, long, value_name = "date")]
         to: String,
     },
 
+    /// query the last value of a time serie
     LastValue {
+        /// serie identifier
         id: String,
     },
 }
