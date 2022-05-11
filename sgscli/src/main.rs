@@ -1,5 +1,5 @@
+use chrono::NaiveDate;
 use clap::{Parser, Subcommand};
-use sgslib::messages::Item;
 use sgslib::ports::FachadaWSSGS;
 use std::process;
 
@@ -60,61 +60,67 @@ fn exit_with_error(err: InvalidDateStringFormat) -> ! {
     process::exit(1);
 }
 
-fn into_sgs_date_format(date_str: String) -> Result<String, InvalidDateStringFormat> {
+fn parse_sgs_date(date_str: &str) -> Result<NaiveDate, InvalidDateStringFormat> {
     let str_bytes = date_str.as_bytes();
 
     if str_bytes.len() != 10 {
-        return Err(InvalidDateStringFormat { date_str });
+        return Err(InvalidDateStringFormat {
+            date_str: String::from(date_str),
+        });
     }
 
     for b in str_bytes {
         if *b != b'-' && *b != b'/' && !b.is_ascii_digit() {
-            return Err(InvalidDateStringFormat { date_str });
+            return Err(InvalidDateStringFormat {
+                date_str: String::from(date_str),
+            });
         }
     }
 
     if str_bytes[4] == b'-' && str_bytes[7] == b'-' {
         // yyyy-mm-dd
-        let yyyy = &str_bytes[0..4];
-        let mm = &str_bytes[5..7];
-        let dd = &str_bytes[8..10];
+        let yyyy = &date_str[0..4].parse().unwrap();
+        let mm = &date_str[5..7].parse().unwrap();
+        let dd = &date_str[8..10].parse().unwrap();
 
-        let result = vec![
-            dd[0], dd[1], b'/', mm[0], mm[1], b'/', yyyy[0], yyyy[1], yyyy[2], yyyy[3],
-        ];
-
-        Ok(String::from_utf8(result).unwrap())
+        Ok(NaiveDate::from_ymd(*yyyy, *mm, *dd))
     } else if str_bytes[2] == b'/' && str_bytes[5] == b'/' {
         // dd/mm/yyyy
-        Ok(date_str)
+        let dd = &date_str[0..2].parse().unwrap();
+        let mm = &date_str[3..5].parse().unwrap();
+        let yyyy = &date_str[6..10].parse().unwrap();
+
+        Ok(NaiveDate::from_ymd(*yyyy, *mm, *dd))
     } else {
-        Err(InvalidDateStringFormat { date_str })
+        Err(InvalidDateStringFormat {
+            date_str: String::from(date_str),
+        })
     }
 }
 
 #[test]
-fn test_into_sgs_date_format() {
-    assert!(into_sgs_date_format("2020-12-31".to_string()).unwrap() == "31/12/2020");
-    assert!(into_sgs_date_format("31/12/2020".to_string()).unwrap() == "31/12/2020");
+fn test_parse_sgs_date() {
+    assert!(parse_sgs_date("2020-12-31").unwrap() == NaiveDate::from_ymd(2020, 12, 31));
+    assert!(parse_sgs_date("31/12/2020").unwrap() == NaiveDate::from_ymd(2020, 12, 31));
 }
 
 async fn execute_get_series(list: Vec<String>, from: String, to: String) {
-    let from = match into_sgs_date_format(from) {
+    let from = match parse_sgs_date(&from) {
         Ok(date_string) => date_string,
         Err(err) => exit_with_error(err),
     };
 
-    let to = match into_sgs_date_format(to) {
+    let to = match parse_sgs_date(&to) {
         Ok(date_string) => date_string,
         Err(err) => exit_with_error(err),
     };
 
-    let mut vec_items: Vec<Item> = Vec::with_capacity(list.len());
+    let mut vec_series: Vec<i64> = Vec::with_capacity(list.len());
 
     for id in list.iter() {
         match id.parse() {
             Ok(val) => {
-                vec_items.push(Item::new(val));
+                vec_series.push(val);
             }
             Err(_) => {
                 eprintln!(
@@ -126,20 +132,11 @@ async fn execute_get_series(list: Vec<String>, from: String, to: String) {
         }
     }
 
-    let item_list = sgslib::messages::ItemList { items: vec_items };
-
-    let request = sgslib::messages::GetValoresSeriesXMLRequest {
-        in0: item_list,
-        in1: from,
-        in2: to,
-    };
-
     let sgs_client = sgslib::services::FachadaWSSGSService::new_client(Option::None);
-    let response = sgs_client.get_valores_series_xml(request).await;
+    let response = sgslib::get_valores_series_xml(&sgs_client, &vec_series, from, to).await;
 
     match response {
-        Ok(response) => {
-            let series_xml = response.get_valores_series_xml_return.val;
+        Ok(series_xml) => {
             println!("{}", series_xml);
         }
         Err(err) => {
