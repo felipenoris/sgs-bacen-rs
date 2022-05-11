@@ -116,17 +116,19 @@ async fn execute_get_series(list: Vec<String>, from: String, to: String) {
 
     let mut vec_series: Vec<i64> = Vec::with_capacity(list.len());
 
-    for id in list.iter() {
-        match id.parse() {
-            Ok(val) => {
-                vec_series.push(val);
-            }
-            Err(_) => {
-                eprintln!(
-                    "Invalid Serie ID: `{}`. Hint: all series must have a numeric ID.",
-                    id
-                );
-                process::exit(1);
+    for list_element in list.iter() {
+        for id in list_element.split(' ') {
+            match id.parse() {
+                Ok(val) => {
+                    vec_series.push(val);
+                }
+                Err(_) => {
+                    eprintln!(
+                        "Invalid Serie ID: `{}`. Hint: all series must have a numeric ID.",
+                        id
+                    );
+                    process::exit(1);
+                }
             }
         }
     }
