@@ -1,0 +1,11 @@
+[package]
+name = "ffi"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+sgslib = { version="0.1", path = "../sgslib" }
+tokio = { version = "1", features = ["full"] }
+chrono = "0.4"
