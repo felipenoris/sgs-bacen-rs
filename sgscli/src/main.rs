@@ -1,6 +1,5 @@
 use chrono::NaiveDate;
 use clap::{Parser, Subcommand};
-use sgslib::ports::FachadaWSSGS;
 use std::process;
 
 #[derive(Parser, Debug)]
@@ -151,15 +150,10 @@ async fn execute_get_ultimo_valor(id: &str) {
 
     match id.parse() {
         Ok(id) => {
-            let ultimo_valor = sgs_client
-                .get_ultimo_valor_xml(sgslib::messages::GetUltimoValorXMLRequest {
-                    in0: sgslib::messages::Item::new(id),
-                })
-                .await;
+            let ultimo_valor = sgslib::get_ultimo_valor_xml(&sgs_client, id).await;
 
             match ultimo_valor {
                 Ok(ultimo_valor) => {
-                    let ultimo_valor = ultimo_valor.get_ultimo_valor_xml_return;
                     println!("{}", ultimo_valor);
                 }
                 Err(err) => {

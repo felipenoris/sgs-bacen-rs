@@ -70,3 +70,19 @@ pub async fn get_valores_series_xml(
         Err(err) => Err(err),
     }
 }
+
+pub async fn get_ultimo_valor_xml(
+    client: &dyn ports::FachadaWSSGS,
+    serie_id: i64,
+) -> Result<String, Option<SoapFault>> {
+    let ultimo_valor = client
+        .get_ultimo_valor_xml(messages::GetUltimoValorXMLRequest {
+            in0: messages::Item::new(serie_id),
+        })
+        .await;
+
+    match ultimo_valor {
+        Ok(ultimo_valor) => Ok(ultimo_valor.get_ultimo_valor_xml_return),
+        Err(err) => Err(err),
+    }
+}
