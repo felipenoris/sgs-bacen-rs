@@ -103,17 +103,7 @@ fn test_parse_sgs_date() {
     assert!(parse_sgs_date("31/12/2020").unwrap() == NaiveDate::from_ymd(2020, 12, 31));
 }
 
-async fn execute_get_series(list: Vec<String>, from: String, to: String) {
-    let from = match parse_sgs_date(&from) {
-        Ok(date_string) => date_string,
-        Err(err) => exit_with_error(err),
-    };
-
-    let to = match parse_sgs_date(&to) {
-        Ok(date_string) => date_string,
-        Err(err) => exit_with_error(err),
-    };
-
+fn parse_series_list(list: &[String]) -> Vec<i64> {
     let mut vec_series: Vec<i64> = Vec::with_capacity(list.len());
 
     for list_element in list.iter() {
@@ -132,6 +122,22 @@ async fn execute_get_series(list: Vec<String>, from: String, to: String) {
             }
         }
     }
+
+    vec_series
+}
+
+async fn execute_get_series(list: Vec<String>, from: String, to: String) {
+    let from = match parse_sgs_date(&from) {
+        Ok(date_string) => date_string,
+        Err(err) => exit_with_error(err),
+    };
+
+    let to = match parse_sgs_date(&to) {
+        Ok(date_string) => date_string,
+        Err(err) => exit_with_error(err),
+    };
+
+    let vec_series = parse_series_list(&list);
 
     let sgs_client = sgslib::services::FachadaWSSGSService::new_client(Option::None);
     let response = sgslib::get_valores_series_xml(&sgs_client, &vec_series, from, to).await;
