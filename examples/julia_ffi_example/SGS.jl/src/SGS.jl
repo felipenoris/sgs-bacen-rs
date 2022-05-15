@@ -1,5 +1,5 @@
 
-module SGSJulia
+module SGS
 
 include("deps.jl")
 include("api.jl")
