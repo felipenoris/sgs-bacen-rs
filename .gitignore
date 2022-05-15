@@ -2,4 +2,4 @@
 **/Cargo.lock
 **/.DS_Store
 **/Manifest.toml
-examples/julia_ffi_example/SGS.jl/contrib/libsgs.jl
+examples/julia_example/SGS.jl/contrib/libsgs.jl

@@ -13,9 +13,11 @@ client = SGS.SGSClient()
 @testset "get_ultimo_valor_xml" begin
     str = SGS.get_ultimo_valor_xml(client, 1)
     @test startswith(str, "<?xml version")
+    println(str)
 end
 
 @testset "get_valores_series_xml" begin
     str = SGS.get_valores_series_xml(client, [1, 12], Date(2022, 5, 1), Date(2022, 5, 5))
     @test startswith(str, "<?xml version")
+    println(str)
 end

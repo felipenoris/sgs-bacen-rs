@@ -3,7 +3,7 @@ members = [
     "sgslib",
     "sgscli",
     "ffi",
-    "examples/sgslib_example",
+    "examples/rust_example",
 ]
 
 [profile.release]

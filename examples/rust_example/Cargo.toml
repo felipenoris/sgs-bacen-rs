@@ -1,5 +1,5 @@
 [package]
-name = "sgslib_example"
+name = "rust_example"
 version = "0.1.0"
 edition = "2021"
 authors = [ "Felipe Noronha <felipenoris@gmail.com>" ]
