@@ -1,4 +1,12 @@
 
+#
+# This script generates `libsgs.jl` in the current folder
+# that can be used as a starting point for `SGS.jl/api.jl`.
+#
+# Run this script with the following command:
+# `julia generator.jl`
+#
+
 using Pkg
 Pkg.activate(@__DIR__)
 Pkg.instantiate()
