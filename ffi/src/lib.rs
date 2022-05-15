@@ -35,11 +35,9 @@ async fn async_sgslib_get_ultimo_valor_xml(serie_id: i64, out_xml: *mut *mut c_c
 }
 
 #[no_mangle]
-pub extern "C" fn sgslib_free_xml(xml: *mut c_char) {
+pub unsafe extern "C" fn sgslib_free_xml(xml: *mut c_char) {
     if !xml.is_null() {
         // retakes ownership and drop
-        unsafe {
-            drop(CString::from_raw(xml));
-        }
+        drop(CString::from_raw(xml));
     }
 }
