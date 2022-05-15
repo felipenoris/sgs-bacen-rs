@@ -5,7 +5,6 @@
 
 int main() {
     void *client = sgslib_client_new();
-
     char *out_xml;
 
     sgslib_get_ultimo_valor_xml(client, 12, &out_xml);
