@@ -1,0 +1,10 @@
+[package]
+name = "sgslib_example"
+version = "0.1.0"
+edition = "2021"
+authors = [ "Felipe Noronha <felipenoris@gmail.com>" ]
+license = "MIT"
+
+[dependencies]
+sgslib = { version = "0.1", path = "../../sgslib" }
+tokio = { version = "1", features = ["full"] }
