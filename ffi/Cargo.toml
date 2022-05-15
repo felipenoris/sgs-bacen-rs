@@ -1,11 +1,17 @@
 [package]
-name = "ffi"
+name = "sgsffi"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+build = "build.rs"
 
 [dependencies]
 sgslib = { version="0.1", path = "../sgslib" }
 tokio = { version = "1", features = ["full"] }
 chrono = "0.4"
+
+[lib]
+name = "sgs"
+crate-type = ["staticlib", "cdylib"]
+
+[build-dependencies]
+cbindgen = "0.23"

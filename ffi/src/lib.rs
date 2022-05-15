@@ -12,7 +12,7 @@ pub unsafe extern "C" fn sgslib_get_ultimo_valor_xml(
         .block_on(async_sgslib_get_ultimo_valor_xml(serie_id, out_xml))
 }
 
-async unsafe fn async_sgslib_get_ultimo_valor_xml(serie_id: i64, out_xml: *mut *mut c_char) -> i32 {
+async fn async_sgslib_get_ultimo_valor_xml(serie_id: i64, out_xml: *mut *mut c_char) -> i32 {
     let client = sgslib::services::FachadaWSSGSService::new_client(Option::None);
 
     match sgslib::get_ultimo_valor_xml(&client, serie_id).await {
@@ -20,7 +20,9 @@ async unsafe fn async_sgslib_get_ultimo_valor_xml(serie_id: i64, out_xml: *mut *
             let cstring = CString::new(str_xml).unwrap();
             // transfers ownership to the caller
 
-            *out_xml = cstring.into_raw();
+            unsafe {
+                *out_xml = cstring.into_raw();
+            }
 
             // return success code
             0
@@ -33,9 +35,11 @@ async unsafe fn async_sgslib_get_ultimo_valor_xml(serie_id: i64, out_xml: *mut *
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn sgslib_free_xml(xml: *mut c_char) {
+pub extern "C" fn sgslib_free_xml(xml: *mut c_char) {
     if !xml.is_null() {
         // retakes ownership and drop
-        drop(CString::from_raw(xml));
+        unsafe {
+            drop(CString::from_raw(xml));
+        }
     }
 }
