@@ -1,0 +1,6 @@
+[general]
+library_name = "libsgs"
+output_file_path = "./libsgs.jl"
+module_name = "SGSLIB"
+jll_pkg_name = "Sgs_jll"
+export_symbol_prefixes = ["sgslib"]
