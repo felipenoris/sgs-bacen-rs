@@ -74,6 +74,16 @@ $ sgs series 1 4389 --from 2020-01-01 --to 2020-01-05
 </SERIES>
 ```
 
+# Examples
+
+Check the `examples` folder for the following examples:
+
+* `rust_example`: a Rust app that uses the `sgslib` Rust library.
+
+* `c_example`: a C app that uses the FFI interface for `sgslib` Rust library.
+
+* `julia_example`: a Julia library `SGS.jl` that uses the FFI interface for `sgslib` Rust library.
+
 # Resources
 
 * WSDL: <https://www3.bcb.gov.br/sgspub/JSP/sgsgeral/FachadaWSSGS.wsdl>
