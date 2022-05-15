@@ -3,3 +3,4 @@
 **/.DS_Store
 **/Manifest.toml
 examples/julia_example/SGS.jl/contrib/libsgs.jl
+.vscode
