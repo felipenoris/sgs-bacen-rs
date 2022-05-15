@@ -31,7 +31,9 @@ pub unsafe extern "C" fn sgslib_client_free(client_handle: *mut FachadaWSSGSSoap
     }
 }
 
-unsafe fn ptr_into_client_ref<'a>(client_handle_ref: &'a *const FachadaWSSGSSoapBinding) -> &'a FachadaWSSGSSoapBinding {
+unsafe fn ptr_into_client_ref<'a>(
+    client_handle_ref: &'a *const FachadaWSSGSSoapBinding,
+) -> &'a FachadaWSSGSSoapBinding {
     assert!(!client_handle_ref.is_null());
     &**client_handle_ref
 }
@@ -41,10 +43,7 @@ async fn async_sgslib_get_ultimo_valor_xml(
     serie_id: i64,
     out_xml: *mut *mut c_char,
 ) -> i32 {
-
-    let client = unsafe {
-        ptr_into_client_ref(&client_handle)
-    };
+    let client = unsafe { ptr_into_client_ref(&client_handle) };
 
     match sgslib::get_ultimo_valor_xml(client, serie_id).await {
         Ok(str_xml) => {
