@@ -11,7 +11,7 @@ git clone https://github.com/felipenoris/sgs-bacen-rs
 cargo install --path ./sgs-bacen-rs/sgscli
 ```
 
-After installation, the binary `sgs` will be ready to use.
+After installation, the binary `sgscli` will be ready to use.
 
 # Usage
 
@@ -19,7 +19,7 @@ The following command will print the last value
 for the time series identified by code `1`.
 
 ```shell
-$ sgs last-value 1
+$ sgscli last-value 1
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <resposta status='2' descricao='Processado com sucesso'>
 <SERIE>
@@ -44,7 +44,7 @@ from date `2020-01-01` to `2020-01-05`.
 Dates can be informed using `yyyy-mm-dd` or `dd/mm/yyyy` format.
 
 ```shell
-$ sgs series 1 4389 --from 2020-01-01 --to 2020-01-05
+$ sgscli series 1 4389 --from 2020-01-01 --to 2020-01-05
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <SERIES>
 <SERIE ID='1'>
